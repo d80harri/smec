@@ -6,12 +6,10 @@ public class StatsDto {
     private int id;
     private String type;
     private Date time;
-    private int accountId;
 
-    public StatsDto(String type, Date time, int accountId) {
+    public StatsDto(String type, Date time) {
         this.type = type;
         this.time = time;
-        this.accountId = accountId;
     }
 
     public StatsDto() {
@@ -39,13 +37,5 @@ public class StatsDto {
 
     public void setTime(Date time) {
         this.time = time;
-    }
-
-    public int getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
     }
 }

@@ -8,6 +8,7 @@ import com.smec.users.exceptions.IllegalReferenceException;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,22 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 import javassist.tools.web.BadHttpRequest;
 
 @RestController
-@RequestMapping(value = "/stats")
+@RequestMapping(value = "/accounts/{accountId}/stats")
 public class StatsController {
 
     @Autowired
     private IStatsService eventService;
 
     @GetMapping()
-    public List<StatsDto> list() {
-        List<StatsEntry> entries = eventService.fetchAllEvents();
+    public List<StatsDto> list(@PathVariable("accountId") int accountId) {
+        List<StatsEntry> entries = eventService.fetchAll(accountId);
         return entries.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @PostMapping
-    public StatsDto store(@RequestBody StatsDto entity) throws BadHttpRequest {
+    public StatsDto store(@PathVariable("accountId") int accountId, @RequestBody StatsDto entity)
+            throws BadHttpRequest {
         try {
-            return mapToDto(eventService.store(mapToEntry(entity), entity.getAccountId()));
+            return mapToDto(eventService.store(mapToEntry(entity), accountId));
         } catch (IllegalReferenceException e) {
             throw new BadHttpRequest(e);
         }
@@ -47,7 +49,6 @@ public class StatsController {
 
     private StatsDto mapToDto(StatsEntry entry) {
         StatsDto result = new StatsDto();
-        result.setAccountId(entry.getAccount().getId());
         result.setTime(entry.getTime());
         result.setId(entry.getId());
         result.setType(entry.getType());

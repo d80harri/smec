@@ -14,8 +14,9 @@ public class StatsDao implements IStatsDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<StatsEntry> fetchAllAccounts() {
-        return entityManager.createQuery("FROM StatsEntry").getResultList();
+    public List<StatsEntry> fetchAll(int accountId) {
+        return entityManager.createQuery("FROM StatsEntry WHERE account.id=:accountId")
+                .setParameter("accountId", accountId).getResultList();
     }
 
     @Override

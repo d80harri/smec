@@ -8,9 +8,7 @@ import com.smec.users.accounts.AccountController;
 import com.smec.users.accounts.AccountEntity;
 
 import org.assertj.core.api.Assertions;
-import org.junit.After;
 import org.junit.Rule;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,26 +33,25 @@ public class StatsControllerTest {
 
 	@Test
 	public void canPersistAndLoad() throws Throwable {
-		Assertions.assertThat(target.list()).isEmpty();
-
 		AccountEntity account = accountController.store(new AccountEntity("someAccount"));
+		Assertions.assertThat(target.list(account.getId())).isEmpty();
 
 		for (int i = 0; i < 3; i++) {
 			String name = "name " + i;
 			Date date = new Date(i);
-			StatsDto result = target.store(new StatsDto(name, date, account.getId()));
+			StatsDto result = target.store(account.getId(), new StatsDto(name, date));
 			Assertions.assertThat(result.getType()).isEqualTo(name);
 			Assertions.assertThat(result.getTime()).isEqualTo(date);
 			Assertions.assertThat(result.getId()).isNotNull();
 		}
 
-		List<StatsDto> listResult = target.list();
+		List<StatsDto> listResult = target.list(account.getId());
 		Assertions.assertThat(listResult).hasSize(3);
 	}
 
 	@Test
 	public void persistForUnknownAccount() throws Throwable {
-		Assertions.assertThatThrownBy(() -> target.store(new StatsDto("some", new Date(), -1)))
+		Assertions.assertThatThrownBy(() -> target.store(-1, new StatsDto("some", new Date())))
 				.isInstanceOf(BadHttpRequest.class);
 	}
 
