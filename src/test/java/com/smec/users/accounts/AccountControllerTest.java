@@ -5,7 +5,6 @@ import java.util.List;
 import com.smec.users.DatabaseCleanupRule;
 
 import org.assertj.core.api.Assertions;
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

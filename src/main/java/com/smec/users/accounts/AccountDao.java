@@ -23,4 +23,9 @@ public class AccountDao implements IAccountDao {
         return entity;
     }
 
+    @Override
+    public AccountEntity getById(int accountId) {
+        return entityManager.find(AccountEntity.class, accountId);
+    }
+
 }

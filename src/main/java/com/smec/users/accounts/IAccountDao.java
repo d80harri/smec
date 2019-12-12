@@ -6,4 +6,6 @@ public interface IAccountDao {
     List<AccountEntity> fetchAllAccounts();
 
     AccountEntity store(AccountEntity entity);
+
+    AccountEntity getById(int accountId);
 }
