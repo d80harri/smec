@@ -8,4 +8,6 @@ public interface IEventService {
     List<EventEntity> fetchAllEvents();
 
     EventEntity store(EventEntity entity, int accountId) throws IllegalReferenceException;
+
+    int deleteOld(long l);
 }

@@ -1,5 +1,6 @@
 package com.smec.users.events;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,6 +22,12 @@ public class EventDao implements IEventDao {
     public EventEntity store(EventEntity entity) {
         entityManager.persist(entity);
         return entity;
+    }
+
+    @Override
+    public int deleteOld(long l) {
+        return entityManager.createQuery("DELETE FROM EventEntity WHERE time < :time").setParameter("time", new Date(l))
+                .executeUpdate();
     }
 
 }

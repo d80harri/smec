@@ -27,13 +27,16 @@ public class EventService implements IEventService {
     @Override
     public EventEntity store(EventEntity entity, int accountId) throws IllegalReferenceException {
         entity.setTime(new Date());
-        // TODO: test unknown account
         AccountEntity account = accountDao.getById(accountId);
         if (account == null) {
             throw new IllegalReferenceException("Account with id " + accountId + " does not exist.");
         }
         entity.setAccount(account);
         return eventDao.store(entity);
+    }
+
+    public int deleteOld(long l) {
+        return eventDao.deleteOld(l);
     }
 
     public static class IllegalReferenceException extends Exception {
@@ -43,4 +46,5 @@ public class EventService implements IEventService {
             super(msg);
         }
     }
+
 }

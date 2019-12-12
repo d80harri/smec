@@ -6,4 +6,6 @@ public interface IEventDao {
     List<EventEntity> fetchAllAccounts();
 
     EventEntity store(EventEntity entity);
+
+    int deleteOld(long l);
 }
