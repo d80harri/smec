@@ -1,4 +1,4 @@
-package com.smec.users.events;
+package com.smec.users.stats;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javassist.tools.web.BadHttpRequest;
 
 @SpringBootTest
-public class EventControllerTest {
+public class StatsControllerTest {
 
 	@Autowired
 	@Rule
@@ -28,7 +28,7 @@ public class EventControllerTest {
 	 */
 
 	@Autowired
-	private EventController target;
+	private StatsController target;
 
 	@Autowired
 	private AccountController accountController;
@@ -41,20 +41,21 @@ public class EventControllerTest {
 
 		for (int i = 0; i < 3; i++) {
 			String name = "name " + i;
-			EventEntity result = target.store(new EventDto(name, account.getId()));
+			Date date = new Date(i);
+			StatsDto result = target.store(new StatsDto(name, date, account.getId()));
 			Assertions.assertThat(result.getType()).isEqualTo(name);
-			Assertions.assertThat(result.getTime()).isNotNull().isBetween(new Date(System.currentTimeMillis() - 1000),
-					new Date());
+			Assertions.assertThat(result.getTime()).isEqualTo(date);
 			Assertions.assertThat(result.getId()).isNotNull();
 		}
 
-		List<EventEntity> listResult = target.list();
+		List<StatsDto> listResult = target.list();
 		Assertions.assertThat(listResult).hasSize(3);
 	}
 
 	@Test
 	public void persistForUnknownAccount() throws Throwable {
-		Assertions.assertThatThrownBy(() -> target.store(new EventDto("some", -1))).isInstanceOf(BadHttpRequest.class);
+		Assertions.assertThatThrownBy(() -> target.store(new StatsDto("some", new Date(), -1)))
+				.isInstanceOf(BadHttpRequest.class);
 	}
 
 }

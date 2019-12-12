@@ -1,4 +1,4 @@
-package com.smec.users.events;
+package com.smec.users.stats;
 
 import java.util.Date;
 import java.util.List;
@@ -13,31 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class EventService implements IEventService {
+public class StatsService implements IStatsService {
 
     @Autowired
-    private IEventDao eventDao;
+    private IStatsDao eventDao;
 
     @Autowired
     private IAccountDao accountDao;
 
-    public List<EventEntity> fetchAllEvents() {
+    public List<StatsEntry> fetchAllEvents() {
         return eventDao.fetchAllAccounts();
     }
 
     @Override
-    public EventEntity store(EventEntity entity, int accountId) throws IllegalReferenceException {
-        entity.setTime(new Date());
+    public StatsEntry store(StatsEntry entity, int accountId) throws IllegalReferenceException {
         AccountEntity account = accountDao.getById(accountId);
         if (account == null) {
             throw new IllegalReferenceException("Account with id " + accountId + " does not exist.");
         }
         entity.setAccount(account);
         return eventDao.store(entity);
-    }
-
-    public int deleteOld(long l) {
-        return eventDao.deleteOld(l);
     }
 
 }

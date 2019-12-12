@@ -2,7 +2,7 @@ package com.smec.users.events;
 
 import java.util.List;
 
-import com.smec.users.events.EventService.IllegalReferenceException;
+import com.smec.users.exceptions.IllegalReferenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +21,11 @@ public class EventController {
     private IEventService eventService;
 
     @GetMapping()
-    public List<EventEntity> list() {
+    public List<EventEntity> list() { // TODO: should return DTO
         return eventService.fetchAllEvents();
     }
 
-    @PostMapping
+    @PostMapping // TODO: should return DTO
     public EventEntity store(@RequestBody EventDto entity) throws Exception {
         try {
             return eventService.store(new EventEntity(entity.getType()), entity.getAccountId());

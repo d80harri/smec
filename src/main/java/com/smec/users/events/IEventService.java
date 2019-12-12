@@ -2,7 +2,7 @@ package com.smec.users.events;
 
 import java.util.List;
 
-import com.smec.users.events.EventService.IllegalReferenceException;
+import com.smec.users.exceptions.IllegalReferenceException;
 
 public interface IEventService {
     List<EventEntity> fetchAllEvents();
