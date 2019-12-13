@@ -28,6 +28,12 @@ public class EventEntity {
     @ManyToOne
     private AccountEntity account;
 
+    public EventEntity(String type, Date time, AccountEntity account) {
+        this.type = type;
+        this.time = time;
+        this.account = account;
+    }
+
     public EventEntity(String type) {
         this.type = type;
     }

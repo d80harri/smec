@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.smec.users.stats.StatsEntry;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,9 +27,22 @@ public class EventDao implements IEventDao {
     }
 
     @Override
-    public int deleteOld(long l) {
-        return entityManager.createQuery("DELETE FROM EventEntity WHERE time < :time").setParameter("time", new Date(l))
+    public List<StatsEntry> getStats(int accountId) {
+        return entityManager.createQuery("SELECT new StatsEntry(type, YEAR(ee.time), MONTH(ee.time), DAY(ee.time), account, COUNT(ee.id)) " +
+                " FROM EventEntity ee WHERE ee.account.id=:accountId GROUP BY ee.type, YEAR(ee.time), MONTH(ee.time), DAY(ee.time), ee.account")
+                .setParameter("accountId", accountId).getResultList();
+    }
+
+    @Override
+    public void deleteStatsYoungerThan(Date time) {
+        entityManager.createQuery("DELETE FROM EventEntity WHERE time < :time").setParameter("time", time)
                 .executeUpdate();
+    }
+
+    @Override
+    public List<EventEntity> getEventsBefore(Date time) {
+        return entityManager.createQuery("FROM EventEntity WHERE time<:time")
+                .setParameter("time", time).getResultList();
     }
 
 }

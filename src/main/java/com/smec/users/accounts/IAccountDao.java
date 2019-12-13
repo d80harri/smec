@@ -8,4 +8,5 @@ public interface IAccountDao {
     AccountEntity store(AccountEntity entity);
 
     AccountEntity getById(int accountId);
+
 }

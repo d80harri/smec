@@ -9,5 +9,4 @@ public interface IEventService {
 
     EventEntity store(EventEntity entity, int accountId) throws IllegalReferenceException;
 
-    int deleteOld(long l);
 }

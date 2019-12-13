@@ -8,9 +8,8 @@ import com.smec.users.accounts.AccountController;
 import com.smec.users.accounts.AccountEntity;
 
 import org.assertj.core.api.Assertions;
-import org.junit.After;
 import org.junit.Rule;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,9 +22,10 @@ public class EventControllerTest {
 	@Autowired
 	@Rule
 	public DatabaseCleanupRule rule;
-	/*
-	 * @AfterEach public void after() { rule.execute(); }
-	 */
+
+	 @BeforeEach
+	 public void cleanDb() { rule.execute(); }
+
 
 	@Autowired
 	private EventController target;

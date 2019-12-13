@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import com.smec.users.accounts.AccountEntity;
 
 @Entity
-@Table(name = "events")
+@Table(name = "stat")
 public class StatsEntry {
 
     @Id
@@ -23,16 +23,28 @@ public class StatsEntry {
     @Column
     private String type;
     @Column
-    private Date time;
+    private int year;
+    @Column
+    private int month;
+    @Column
+    private int day;
+    @Column(nullable = false)
+    private long count;
 
     @ManyToOne
     private AccountEntity account;
 
-    public StatsEntry(String type) {
-        this.type = type;
-    }
 
     public StatsEntry() {
+    }
+
+    public StatsEntry(String type, int year, int month, int day, AccountEntity account, long count) {
+        this.type = type;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.account = account;
+        this.count = count;
     }
 
     public int getId() {
@@ -59,11 +71,35 @@ public class StatsEntry {
         this.account = account;
     }
 
-    public Date getTime() {
-        return time;
+    public int getYear() {
+        return year;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

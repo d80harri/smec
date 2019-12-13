@@ -1,19 +1,24 @@
 package com.smec.users.stats;
 
-import java.util.Date;
-import java.util.List;
-
 import com.smec.users.DatabaseCleanupRule;
 import com.smec.users.accounts.AccountController;
-import com.smec.users.accounts.AccountEntity;
 
+import com.smec.users.accounts.AccountEntity;
+import com.smec.users.accounts.AccountService;
+import com.smec.users.base.DateUtils;
+import com.smec.users.base.IClock;
+import com.smec.users.events.EventController;
+import com.smec.users.events.EventDto;
+import com.smec.users.events.EventEntity;
+import com.smec.users.events.EventService;
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javassist.tools.web.BadHttpRequest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 public class StatsControllerTest {
@@ -21,38 +26,43 @@ public class StatsControllerTest {
 	@Autowired
 	@Rule
 	public DatabaseCleanupRule rule;
-	/*
-	 * @AfterEach public void after() { rule.execute(); }
-	 */
+
+	 @BeforeEach
+	 public void cleanDb() { rule.execute(); }
+
 
 	@Autowired
 	private StatsController target;
 
 	@Autowired
-	private AccountController accountController;
+	private EventController eventService;
 
+	@Autowired
+	private AccountController accountService;
+
+	@MockBean
+	private IClock mockedClock;
 	@Test
-	public void canPersistAndLoad() throws Throwable {
-		AccountEntity account = accountController.store(new AccountEntity("someAccount"));
-		Assertions.assertThat(target.list(account.getId())).isEmpty();
+	public void canArchivateAndRead() throws Throwable {
+		AccountEntity account = accountService.store(new AccountEntity("some"));
+		int accountId = account.getId();
 
-		for (int i = 0; i < 3; i++) {
-			String name = "name " + i;
-			Date date = new Date(i);
-			StatsDto result = target.store(account.getId(), new StatsDto(name, date));
-			Assertions.assertThat(result.getType()).isEqualTo(name);
-			Assertions.assertThat(result.getTime()).isEqualTo(date);
-			Assertions.assertThat(result.getId()).isNotNull();
-		}
+		Assertions.assertThat(target.list(accountId)).hasSize(0);
 
-		List<StatsDto> listResult = target.list(account.getId());
-		Assertions.assertThat(listResult).hasSize(3);
+		Mockito.when(mockedClock.now()).thenReturn(DateUtils.yesterday());
+		eventService.store(new EventDto("some event", accountId));
+		eventService.store(new EventDto("some event", accountId));
+		eventService.store(new EventDto("some other event", accountId));
+		eventService.store(new EventDto("some other event", accountId));
+
+		Mockito.when(mockedClock.now()).thenReturn(DateUtils.tomorrow());
+		eventService.store(new EventDto("some event", accountId));
+		eventService.store(new EventDto("some event", accountId));
+		eventService.store(new EventDto("some other event", accountId));
+
+		Assertions.assertThat(eventService.list()).hasSize(7);
+		Assertions.assertThat(target.list(accountId)).hasSize(4);
+
+
 	}
-
-	@Test
-	public void persistForUnknownAccount() throws Throwable {
-		Assertions.assertThatThrownBy(() -> target.store(-1, new StatsDto("some", new Date())))
-				.isInstanceOf(BadHttpRequest.class);
-	}
-
 }

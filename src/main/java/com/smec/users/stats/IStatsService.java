@@ -1,12 +1,12 @@
 package com.smec.users.stats;
 
+import java.util.Date;
 import java.util.List;
-
-import com.smec.users.exceptions.IllegalReferenceException;
 
 public interface IStatsService {
     List<StatsEntry> fetchAll(int accountId);
 
-    StatsEntry store(StatsEntry entity, int accountId) throws IllegalReferenceException;
+    void archivateOldEvents(Date date);
 
+    StatsEntry getByGroup(Date time, String type, int id);
 }

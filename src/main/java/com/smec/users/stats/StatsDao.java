@@ -1,6 +1,5 @@
 package com.smec.users.stats;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -23,6 +22,24 @@ public class StatsDao implements IStatsDao {
     public StatsEntry store(StatsEntry entity) {
         entityManager.persist(entity);
         return entity;
+    }
+
+    public StatsEntry fetchByGroup(int year, int month, int day, String type, int accountId){
+        List<StatsEntry> result = entityManager.createQuery("FROM StatsEntry " +
+                "WHERE year=:year and month=:month and " +
+                "day=:day and type=:type and account.id=:accountId")
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("day", day)
+                .setParameter("type", type)
+                .setParameter("accountId", accountId)
+                .getResultList();
+
+        switch (result.size()){
+            case 0: return null;
+            case 1:return result.get(0);
+            default: throw new IllegalStateException();
+        }
     }
 
 }
