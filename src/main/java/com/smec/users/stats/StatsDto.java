@@ -3,24 +3,15 @@ package com.smec.users.stats;
 import java.util.Date;
 
 public class StatsDto {
-    private int id;
     private String type;
-    private Date time;
+    private int year;
+    private int month;
+    private int day;
+    private long count;
 
-    public StatsDto(String type, Date time) {
-        this.type = type;
-        this.time = time;
-    }
+
 
     public StatsDto() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getType() {
@@ -31,11 +22,34 @@ public class StatsDto {
         this.type = name;
     }
 
-    public Date getTime() {
-        return time;
+    public int getYear() {
+        return year;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

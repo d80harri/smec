@@ -41,14 +41,14 @@ public class EventControllerTest {
 
 		for (int i = 0; i < 3; i++) {
 			String name = "name " + i;
-			EventEntity result = target.store(new EventDto(name, account.getId()));
+			EventDto result = target.store(new EventDto(name, account.getId()));
 			Assertions.assertThat(result.getType()).isEqualTo(name);
 			Assertions.assertThat(result.getTime()).isNotNull().isBetween(new Date(System.currentTimeMillis() - 1000),
 					new Date());
 			Assertions.assertThat(result.getId()).isNotNull();
 		}
 
-		List<EventEntity> listResult = target.list();
+		List<EventDto> listResult = target.list();
 		Assertions.assertThat(listResult).hasSize(3);
 	}
 

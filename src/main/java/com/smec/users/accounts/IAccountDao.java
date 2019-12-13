@@ -9,4 +9,5 @@ public interface IAccountDao {
 
     AccountEntity getById(int accountId);
 
+    void merge(AccountEntity result);
 }

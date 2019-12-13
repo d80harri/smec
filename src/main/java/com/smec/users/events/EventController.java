@@ -1,6 +1,7 @@
 package com.smec.users.events;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.smec.users.exceptions.IllegalReferenceException;
 
@@ -21,16 +22,23 @@ public class EventController {
     private IEventService eventService;
 
     @GetMapping()
-    public List<EventEntity> list() { // TODO: should return DTO
-        return eventService.fetchAllEvents();
+    public List<EventDto> list() { // TODO: should return DTO
+        return eventService.fetchAllEvents().stream().map(EventController::mapToDto).collect(Collectors.toList());
     }
 
     @PostMapping // TODO: should return DTO
-    public EventEntity store(@RequestBody EventDto entity) throws Exception {
+    public EventDto store(@RequestBody EventDto entity) throws Exception {
         try {
-            return eventService.store(new EventEntity(entity.getType()), entity.getAccountId());
+            return mapToDto(eventService.store(new EventEntity(entity.getType()), entity.getAccountId()));
         } catch (IllegalReferenceException e) {
             throw new BadHttpRequest(e);
         }
+    }
+
+    private static EventDto mapToDto(EventEntity store) {
+        EventDto result = new EventDto(store.getType(), store.getAccount().getId());
+        result.setId(store.getId());
+        result.setTime(store.getTime());
+        return result;
     }
 }

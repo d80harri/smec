@@ -40,4 +40,20 @@ public class AccountControllerTest {
 		Assertions.assertThat(listResult).hasSize(3);
 	}
 
+	@Test
+	public void canRead() {
+		String name = "someName";
+		AccountEntity result = target.store(new AccountEntity(name));
+
+		Assertions.assertThat(target.get(result.getId()).getName()).isEqualTo(name);
+	}
+
+	@Test
+	public void canUpdate() {
+		AccountEntity result = target.store(new AccountEntity("someName"));
+		result.setName("someOtherName");
+		target.update(result.getId(), result);
+		Assertions.assertThat(target.get(result.getId()).getName()).isEqualTo("someOtherName");
+	}
+
 }

@@ -25,9 +25,11 @@ public class StatsController {
 
     private StatsDto mapToDto(StatsEntry entry) {
         StatsDto result = new StatsDto();
-        result.setTime(DateUtils.create(entry.getYear(), entry.getMonth(), entry.getDay()));
-        result.setId(entry.getId());
+        result.setYear(entry.getYear());
+        result.setMonth(entry.getMonth());
+        result.setDay(entry.getDay());
         result.setType(entry.getType());
+        result.setCount(entry.getCount());
         return result;
     }
 }

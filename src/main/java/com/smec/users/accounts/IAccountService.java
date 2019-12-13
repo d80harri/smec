@@ -6,4 +6,8 @@ public interface IAccountService {
     List<AccountEntity> fetchAllAccounts();
 
     AccountEntity store(AccountEntity entity);
+
+    AccountEntity get(int id);
+
+    void update(AccountEntity entity);
 }

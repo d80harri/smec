@@ -28,4 +28,9 @@ public class AccountDao implements IAccountDao {
         return entityManager.find(AccountEntity.class, accountId);
     }
 
+    @Override
+    public void merge(AccountEntity result) {
+        entityManager.merge(result);
+    }
+
 }
